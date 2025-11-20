@@ -1,0 +1,3 @@
+[workspace]
+members = ["bins/user", "libs/corelib"]
+resolver = "3"
