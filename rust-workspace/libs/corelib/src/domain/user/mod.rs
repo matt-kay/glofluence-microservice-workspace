@@ -1,4 +1,5 @@
 pub mod events;
+pub mod ports;
 pub mod value_object;
 
 use crate::domain::{
@@ -57,9 +58,9 @@ impl User {
     ) -> Self {
         let mut user = User {
             id,
-            first_name:first_name.clone(),
-            last_name:last_name.clone(),
-            country_term_id:country_term_id.clone(),
+            first_name: first_name.clone(),
+            last_name: last_name.clone(),
+            country_term_id: country_term_id.clone(),
             social_profiles,
             demographics,
             version: 0,
@@ -146,6 +147,16 @@ impl User {
             meta: self.next_meta(),
             event_name: "user.deleted".to_owned(),
         });
+    }
+
+    pub fn restore_from_deleted(&mut self) {
+        self.deleted.restore();
+        self.touch();
+        self.pending_events
+            .push(UserDomainEvent::UserRestoredFromDeleted {
+                meta: self.next_meta(),
+                event_name: "user.restored_from_deleted".to_owned(),
+            });
     }
 
     fn next_meta(&self) -> EventMeta {

@@ -6,7 +6,7 @@ use crate::domain::shared::error::DomainError;
 /// # Field
 /// - `value`- raw uuid v4 value.
 
-#[derive(Debug,PartialEq, Eq,Clone, Copy)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub struct UserId(Uuid);
 
 impl UserId {
@@ -17,6 +17,14 @@ impl UserId {
 
     pub fn as_str(&self) -> String {
         self.0.to_string()
+    }
+
+    pub fn from_uuid(id: Uuid) -> Self {
+        Self(id)
+    }
+
+    pub fn as_uuid(&self) -> Uuid {
+        self.0
     }
 }
 
@@ -37,11 +45,11 @@ impl FirstName {
 
         // Basic validation
         if value.trim().is_empty() {
-            return Err(DomainError::invalid_input("First name cannot be empty"));
+            return Err(DomainError::validation("First name cannot be empty"));
         }
 
         if value.len() > 50 {
-            return Err(DomainError::invalid_input(
+            return Err(DomainError::validation(
                 "First name is too long (max 50 chars)",
             ));
         }
@@ -51,7 +59,7 @@ impl FirstName {
             .chars()
             .all(|c| c.is_alphabetic() || c == '-' || c == '\'')
         {
-            return Err(DomainError::invalid_input(
+            return Err(DomainError::validation(
                 "First name contains invalid characters",
             ));
         }
@@ -64,11 +72,6 @@ impl FirstName {
         &self.0
     }
 }
-
-
-
-
-
 
 /// Last name of a user
 ///
@@ -87,17 +90,22 @@ impl LastName {
 
         // Validation: not empty
         if value.trim().is_empty() {
-            return Err(DomainError::invalid_input("Last name cannot be empty"));
+            return Err(DomainError::validation("Last name cannot be empty"));
         }
 
         // Validation: max length (example: 50)
         if value.len() > 50 {
-            return Err(DomainError::invalid_input("Last name is too long (max 50 chars)"));
+            return Err(DomainError::validation(
+                "Last name is too long (max 50 chars)",
+            ));
         }
 
         // Validation: only alphabetic, dash, or apostrophe
-        if !value.chars().all(|c| c.is_alphabetic() || c == '-' || c == '\'') {
-            return Err(DomainError::invalid_input(
+        if !value
+            .chars()
+            .all(|c| c.is_alphabetic() || c == '-' || c == '\'')
+        {
+            return Err(DomainError::validation(
                 "Last name contains invalid characters",
             ));
         }

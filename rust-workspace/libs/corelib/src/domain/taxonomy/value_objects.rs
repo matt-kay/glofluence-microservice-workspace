@@ -5,7 +5,7 @@ use uuid::Uuid;
 /// # Field
 /// - `value`- raw uuid v4 value.
 
-#[derive(Debug,PartialEq, Eq,Clone,Hash,Serialize,Deserialize)]
+#[derive(Debug, PartialEq, Eq, Clone, Hash, Serialize, Deserialize)]
 pub struct TaxonomyId(Uuid);
 
 impl TaxonomyId {
@@ -16,5 +16,13 @@ impl TaxonomyId {
 
     pub fn as_str(&self) -> String {
         self.0.to_string()
+    }
+
+    pub fn from_uuid(id: Uuid) -> Self {
+        Self(id)
+    }
+
+    pub fn as_uuid(&self) -> Uuid {
+        self.0
     }
 }

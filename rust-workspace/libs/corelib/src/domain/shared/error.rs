@@ -1,59 +1,72 @@
-use thiserror::Error;
+use std::borrow::Cow;
 
-/// Represents all possible domain errors across the application.
-#[derive(Error, Debug)]
+#[derive(Debug, thiserror::Error)]
 pub enum DomainError {
-    // =========================
-    // Validation / Invariants
-    // =========================
-    #[error("invalid input: {0}")]
-    InvalidInput(String),
+    #[error("validation: {message}")]
+    Validation {
+        message: Cow<'static, str>,
+        #[source]
+        source: Option<Box<dyn std::error::Error + Send + Sync>>,
+    },
 
-    #[error("value object invariant violation: {0}")]
-    InvariantViolation(String),
+    #[error("conflict: {message}")]
+    Conflict {
+        message: Cow<'static, str>,
+        #[source]
+        source: Option<Box<dyn std::error::Error + Send + Sync>>,
+    },
 
-    #[error("entity not found: {0}")]
-    EntityNotFound(String),
+    #[error("not found: {message}")]
+    NotFound {
+        message: Cow<'static, str>,
+        #[source]
+        source: Option<Box<dyn std::error::Error + Send + Sync>>,
+    },
 
-    #[error("aggregate validation failed: {0}")]
-    AggregateValidation(String),
-
-    // =========================
-    // Business Rules
-    // =========================
-    #[error("business rule violated: {0}")]
-    BusinessRuleViolation(String),
-
-    #[error("operation not allowed: {0}")]
-    OperationNotAllowed(String),
-
-    // =========================
-    // Domain Service / Logic
-    // =========================
-    #[error("domain service error: {0}")]
-    DomainServiceError(String),
-
-    #[error("dependency or collaborator failure: {0}")]
-    DependencyError(String),
-
-    // =========================
-    // Other / Generic
-    // =========================
-    #[error("unexpected domain error: {0}")]
-    Unexpected(String),
+    #[error("forbidden: {message}")]
+    Forbidden {
+        message: Cow<'static, str>,
+        #[source]
+        source: Option<Box<dyn std::error::Error + Send + Sync>>,
+    },
 }
 
-// Optional: helper constructors
 impl DomainError {
-    pub fn invalid_input(msg: impl Into<String>) -> Self {
-        DomainError::InvalidInput(msg.into())
+    pub fn validation(msg: impl Into<Cow<'static, str>>) -> Self {
+        DomainError::Validation {
+            message: msg.into(),
+            source: None,
+        }
     }
 
-    pub fn entity_not_found(entity: impl Into<String>) -> Self {
-        DomainError::EntityNotFound(entity.into())
+    pub fn conflict(msg: impl Into<Cow<'static, str>>) -> Self {
+        DomainError::Conflict {
+            message: msg.into(),
+            source: None,
+        }
     }
 
-    pub fn business_rule_violation(rule: impl Into<String>) -> Self {
-        DomainError::BusinessRuleViolation(rule.into())
+    pub fn not_found(msg: impl Into<Cow<'static, str>>) -> Self {
+        DomainError::NotFound {
+            message: msg.into(),
+            source: None,
+        }
+    }
+
+    pub fn forbidden(msg: impl Into<Cow<'static, str>>) -> Self {
+        DomainError::Forbidden {
+            message: msg.into(),
+            source: None,
+        }
+    }
+
+    pub fn conflict_with<E>(msg: impl Into<Cow<'static, str>>, err: E) -> Self
+    where
+        E: std::error::Error + Send + Sync + 'static,
+    {
+        DomainError::Conflict {
+            message: msg.into(),
+            source: Some(Box::new(err)),
+        }
     }
 }

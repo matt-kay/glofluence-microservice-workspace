@@ -10,7 +10,7 @@ use std::collections::HashMap;
 /// # Field
 /// - `value`- raw uuid v4 value.
 
-#[derive(Debug, PartialEq, Eq, Serialize, Deserialize,Clone)]
+#[derive(Debug, PartialEq, Eq, Serialize, Deserialize, Clone)]
 pub struct EventId(Uuid);
 
 impl EventId {
@@ -22,10 +22,18 @@ impl EventId {
     pub fn as_str(&self) -> String {
         self.0.to_string()
     }
+
+    pub fn from_uuid(id: Uuid) -> Self {
+        Self(id)
+    }
+
+    pub fn as_uuid(&self) -> Uuid {
+        self.0
+    }
 }
 
 /// OcurredAt value object for tracking ocurred time
-#[derive(Debug, Clone, PartialEq, Eq,Serialize,Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct OcurredAt(DateTime<Utc>);
 
 impl OcurredAt {
@@ -237,7 +245,7 @@ impl fmt::Display for Deleted {
 
 pub type Demographics = HashMap<TaxonomyId, Vec<String>>;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq,Serialize,Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum SocialMediaPlatform {
     Facebook,
     Instagram,
@@ -247,7 +255,7 @@ pub enum SocialMediaPlatform {
     LinkedIn,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq,Serialize,Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct SocialMediaMetadata {
     platform: SocialMediaPlatform,
     profile_name: String,
@@ -277,14 +285,14 @@ impl SocialMediaMetadata {
         let profile_link = profile_link.into();
 
         if is_verified && profile_name.trim().is_empty() {
-            return Err(DomainError::invalid_input(format!(
+            return Err(DomainError::validation(format!(
                 "{:?} profile name cannot be empty when verified",
                 platform
             )));
         }
 
         if is_verified && profile_link.trim().is_empty() {
-            return Err(DomainError::invalid_input(format!(
+            return Err(DomainError::validation(format!(
                 "{:?} profile link cannot be empty when verified",
                 platform
             )));
@@ -331,7 +339,7 @@ impl SocialMediaMetadata {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq,Serialize,Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct SocialMediaProfiles {
     profiles: Vec<SocialMediaMetadata>,
 }
@@ -393,9 +401,7 @@ impl SocialMediaProfiles {
             )?;
             Ok(())
         } else {
-            Err(DomainError::entity_not_found(format!(
-                "{platform:?} profile"
-            )))
+            Err(DomainError::not_found(format!("{platform:?} profile")))
         }
     }
 }

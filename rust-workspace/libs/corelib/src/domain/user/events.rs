@@ -36,8 +36,9 @@ pub enum UserDomainEvent {
         meta: EventMeta,
         event_name: String,
     },
+     UserRestoredFromDeleted {
+        meta: EventMeta,
+        event_name: String,
+    },
 }
 
-pub trait UserEventBus: Send + Sync {
-    fn publish(&self, events: &[UserDomainEvent]) -> Result<(), String>;
-}
