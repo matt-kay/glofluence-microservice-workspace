@@ -9,15 +9,17 @@ pub struct Query;
 #[Object]
 impl Query {
     /// Get a single User
-    async fn get_user<'ctx>(&self, ctx: &Context<'ctx>, id: Uuid) -> Option<User> {
-        let app_state = ctx.data::<AppState>().expect("AppState not initialized");
+    async fn get_user<'ctx>(&self, ctx: &Context<'ctx>, id: Uuid) -> Result<Option<User>, Error> {
+        let app_state = ctx
+            .data::<AppState>()
+            .map_err(|_| Error::new("AppState not available"))?;
 
         let user_service = app_state.user_service.lock().await;
 
         let user_id = UserId::from_uuid(id);
-        let domain_user = user_service.find_by_id(&user_id).await.ok()?;
+        let domain_user = user_service.find_by_id(&user_id).await?;
 
-        domain_user.map(User::from)
+        Ok(domain_user.map(User::from))
     }
 
     /// Get many  User
