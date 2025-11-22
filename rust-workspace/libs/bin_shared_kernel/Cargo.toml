@@ -5,3 +5,4 @@ edition = "2024"
 
 [dependencies]
 async-graphql = "7.0.17"
+corelib = { path = "../../libs/corelib" }

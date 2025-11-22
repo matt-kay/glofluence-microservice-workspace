@@ -6,7 +6,7 @@ use crate::domain::shared::error::DomainError;
 /// # Field
 /// - `value`- raw uuid v4 value.
 
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash, PartialOrd, Ord)]
 pub struct UserId(Uuid);
 
 impl UserId {

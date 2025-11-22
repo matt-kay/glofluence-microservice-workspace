@@ -2,15 +2,20 @@ use std::collections::HashMap;
 
 use crate::{
     domain::{
-        shared::{error::DomainError, value_object::SocialMediaProfiles},
+        shared::{
+            error::DomainError,
+            event::EventMeta,
+            value_object::{EventId, OcurredAt, SocialMediaProfiles},
+        },
         term::value_objects::TermId,
         user::{
             User,
+            events::UserDomainEvent,
             ports::{event::UserDomainEventBus, respository::UserRepository},
             value_object::{FirstName, LastName, UserId},
         },
     },
-    infrastructure::user::adapters::event::UserInMemoryEventBus,
+    predule::InMemoryUserEventBus,
 };
 
 pub struct UserService<R: UserRepository> {
@@ -22,7 +27,7 @@ impl<R: UserRepository> UserService<R> {
     pub fn new(repo: R) -> Self {
         Self {
             repo,
-            bus: Box::new(UserInMemoryEventBus::default()),
+            bus: Box::new(InMemoryUserEventBus::default()),
         }
     }
 
@@ -103,7 +108,7 @@ impl<R: UserRepository> UserService<R> {
         Ok(user)
     }
 
-    pub async fn delete_user(&mut self, user_id: UserId) -> Result<User, DomainError> {
+    pub async fn soft_delete_user(&mut self, user_id: UserId) -> Result<User, DomainError> {
         let mut user = self
             .repo
             .find_by_id(&user_id)
@@ -121,7 +126,10 @@ impl<R: UserRepository> UserService<R> {
         Ok(user)
     }
 
-    pub async fn restore_deleted_user(&mut self, user_id: UserId) -> Result<User, DomainError> {
+    pub async fn restore_soft_deleted_user(
+        &mut self,
+        user_id: UserId,
+    ) -> Result<User, DomainError> {
         let mut user = self
             .repo
             .find_by_id(&user_id)
@@ -137,5 +145,30 @@ impl<R: UserRepository> UserService<R> {
             .publish(&events)
             .map_err(|e| DomainError::conflict(format!("failed to publish events: {}", e)))?;
         Ok(user)
+    }
+
+    pub async fn permanetly_delete_user(&mut self, user_id: UserId) -> Result<(), DomainError> {
+        let user = self
+            .repo
+            .find_by_id(&user_id)
+            .await?
+            .ok_or(DomainError::not_found("user"))?;
+
+        self.repo.delete(&user.id).await?;
+
+        let events = vec![UserDomainEvent::UserDeleted {
+            meta: EventMeta {
+                event_id: EventId::new(),
+                occurred_at: OcurredAt::now(),
+                aggregate_id: user.id.as_str(),
+                aggregate_version: user.version,
+            },
+            event_name: "user.deleted".to_owned(),
+        }];
+
+        self.bus
+            .publish(&events)
+            .map_err(|e| DomainError::conflict(format!("failed to publish events: {}", e)))?;
+        Ok(())
     }
 }

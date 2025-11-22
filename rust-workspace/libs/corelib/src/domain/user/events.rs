@@ -36,9 +36,12 @@ pub enum UserDomainEvent {
         meta: EventMeta,
         event_name: String,
     },
-     UserRestoredFromDeleted {
+    UserSoftDeleted {
+        meta: EventMeta,
+        event_name: String,
+    },
+    UserRestoredFromSoftDeleted {
         meta: EventMeta,
         event_name: String,
     },
 }
-

@@ -26,7 +26,7 @@ use crate::domain::{
 /// - `timestamps`: Timestamp of moment of creation and update.
 /// - `deleted`: Boolean to indicate if user is deleted or not and Timestamp of moment of deletion.
 /// - `version`: optimistic concurrency
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct User {
     pub id: UserId,
 
@@ -141,9 +141,9 @@ impl User {
     pub fn mark_as_deleted(&mut self) {
         self.deleted.mark_deleted();
         self.touch();
-        self.pending_events.push(UserDomainEvent::UserDeleted {
+        self.pending_events.push(UserDomainEvent::UserSoftDeleted {
             meta: self.next_meta(),
-            event_name: "user.deleted".to_owned(),
+            event_name: "user.soft_deleted".to_owned(),
         });
     }
 
@@ -151,9 +151,9 @@ impl User {
         self.deleted.restore();
         self.touch();
         self.pending_events
-            .push(UserDomainEvent::UserRestoredFromDeleted {
+            .push(UserDomainEvent::UserRestoredFromSoftDeleted {
                 meta: self.next_meta(),
-                event_name: "user.restored_from_deleted".to_owned(),
+                event_name: "user.restored_from_soft_deleted".to_owned(),
             });
     }
 

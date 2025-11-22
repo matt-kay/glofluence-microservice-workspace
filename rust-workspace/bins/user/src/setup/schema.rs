@@ -1,11 +1,15 @@
-use async_graphql::{EmptyMutation, EmptySubscription, Schema};
+use async_graphql::{EmptySubscription, Schema};
 
-use crate::graphql::query::Query;
+use crate::{
+    graphql::{mutation::Mutation, query::Query},
+    setup::state::AppState,
+};
 
-pub type AppSchema = Schema<Query, EmptyMutation, EmptySubscription>;
+pub type AppSchema = Schema<Query, Mutation, EmptySubscription>;
 
-pub fn build_schema() -> AppSchema {
-    Schema::build(Query, EmptyMutation, EmptySubscription)
+pub fn build_schema(app_state: AppState) -> AppSchema {
+    Schema::build(Query, Mutation, EmptySubscription)
         // .enable_federation()
+        .data(app_state)
         .finish()
 }
