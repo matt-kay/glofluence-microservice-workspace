@@ -1,5 +1,6 @@
 pub mod events;
 pub mod value_objects;
+pub mod ports;
 
 use crate::domain::{
     shared::{
@@ -7,7 +8,10 @@ use crate::domain::{
         value_object::{Deleted, EventId, OcurredAt, Timestamp},
     },
     taxonomy::value_objects::TaxonomyId,
-    term::{events::TermDomainEvent, value_objects::TermId},
+    term::{
+        events::TermDomainEvent,
+        value_objects::{TermDescription, TermId, TermName},
+    },
 };
 
 #[derive(Debug, Clone)]
@@ -95,24 +99,22 @@ impl Term {
         });
     }
 
-
-       pub fn set_name(&mut self, name: TermName) {
-        self.name = name.clone()
+    pub fn set_name(&mut self, name: TermName) {
+        self.name = name.clone();
         self.touch();
         self.pending_events.push(TermDomainEvent::TermUpdated {
             meta: self.next_meta(),
             event_name: "term.updated".to_owned(),
             taxonomy_id: None,
             parent_id: None,
-            name: name.as_str().to_owned(),
+            name: Some(name.as_str().to_owned()),
             visible: None,
             description: None,
         });
     }
 
-
-         pub fn set_visible(&mut self, visible: bool) {
-        self.visible = visible.clone()
+    pub fn set_visible(&mut self, visible: bool) {
+        self.visible = visible.clone();
         self.touch();
         self.pending_events.push(TermDomainEvent::TermUpdated {
             meta: self.next_meta(),
@@ -120,13 +122,13 @@ impl Term {
             taxonomy_id: None,
             parent_id: None,
             name: None,
-            visible: visible.to_owned(),
+            visible: Some(visible.to_owned()),
             description: None,
         });
     }
 
-             pub fn set_description(&mut self, description: TermDescription) {
-        self.description = description.clone()
+    pub fn set_description(&mut self, description: TermDescription) {
+        self.description = Some(description.clone());
         self.touch();
         self.pending_events.push(TermDomainEvent::TermUpdated {
             meta: self.next_meta(),

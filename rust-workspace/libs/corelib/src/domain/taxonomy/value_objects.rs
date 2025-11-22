@@ -7,7 +7,7 @@ use crate::domain::shared::error::DomainError;
 /// # Field
 /// - `value`- raw uuid v4 value.
 
-#[derive(Debug, PartialEq, Eq, Clone, Hash, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash, PartialOrd, Ord, Deserialize, Serialize)]
 pub struct TaxonomyId(Uuid);
 
 impl TaxonomyId {

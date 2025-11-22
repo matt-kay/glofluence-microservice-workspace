@@ -1,0 +1,39 @@
+use async_graphql::SimpleObject;
+use corelib::predule::Term as DomainTerm;
+use uuid::Uuid;
+
+#[derive(SimpleObject)]
+pub struct Term {
+    pub id: Uuid,
+
+    pub taxonomy_id: Uuid,
+    pub parent_id: Option<Uuid>,
+    pub name: String,
+    pub visible: bool,
+    pub description: Option<String>,
+
+    pub created_at: String,
+    pub updated_at: String,
+    pub deleted: bool,
+    pub deletetion_status: Option<String>,
+    pub version: u64,
+}
+
+impl From<DomainTerm> for Term {
+    fn from(value: DomainTerm) -> Self {
+        Self {
+            id: value.id.as_uuid(),
+            taxonomy_id: value.taxonomy_id.as_uuid(),
+            parent_id: value.parent_id.map(|v| v.as_uuid()),
+            name: value.name.as_str().to_string(),
+            visible: value.visible,
+            description: value.description.map(|v| v.as_str().to_string()),
+
+            created_at: value.timestamps.created_human(),
+            updated_at: value.timestamps.updated_human(),
+            deleted: value.deleted.is_deleted(),
+            deletetion_status: Some(value.deleted.status()),
+            version: value.version,
+        }
+    }
+}
