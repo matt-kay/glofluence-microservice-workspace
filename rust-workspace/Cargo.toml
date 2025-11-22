@@ -1,5 +1,5 @@
 [workspace]
-members = ["bins/user", "libs/corelib"]
+members = ["bins/user", "libs/bin_shared_kernel", "libs/corelib", "libs/env_config"]
 resolver = "3"
 
 

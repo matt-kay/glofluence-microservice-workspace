@@ -23,10 +23,8 @@ use crate::domain::{
 /// - `country_id`: The reference identifier for a `Term`.
 /// - `social_media_platforms`: List of social media platforms of user.
 /// - `demographics`: List of demographics of user.
-/// - `created_at`: Timestamp of moment of creation.
-/// - `updated_at`: Timestamp of moment of update.
-/// - `deleted`: Boolean to indicate if user is deleted or not.
-/// - `deleted_at`: Timestamp of moment of deletion.
+/// - `timestamps`: Timestamp of moment of creation and update.
+/// - `deleted`: Boolean to indicate if user is deleted or not and Timestamp of moment of deletion.
 /// - `version`: optimistic concurrency
 #[derive(Debug)]
 pub struct User {
@@ -125,7 +123,7 @@ impl User {
         self.pending_events
             .push(UserDomainEvent::UserSocialProfileUpdated {
                 meta: self.next_meta(),
-                event_name: "user_social_media_profile.updated".to_owned(),
+                event_name: "user.social_media_profile.updated".to_owned(),
                 latest: social_profiles.to_owned(),
             });
     }
