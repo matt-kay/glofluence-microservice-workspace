@@ -405,3 +405,256 @@ impl SocialMediaProfiles {
         }
     }
 }
+
+/// Email address
+///
+/// # Field
+/// - `value` - raw string value
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(transparent)]
+pub struct EmailAddress(String);
+
+impl EmailAddress {
+    /// Creates a new `EmailAddress` value object
+    pub fn new(value: impl Into<String>) -> Result<Self, DomainError> {
+        let value = value.into();
+
+        if value.trim().is_empty() {
+            return Err(DomainError::validation("Email cannot be empty"));
+        }
+
+        // Very simple validation; optionally replace with regex crate
+        if !value.contains('@') {
+            return Err(DomainError::validation("Invalid email format"));
+        }
+
+        Ok(Self(value))
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+}
+
+/// Phone number
+///
+/// # Field
+/// - `value` - raw string value
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(transparent)]
+pub struct PhoneNumber(String);
+
+impl PhoneNumber {
+    /// Creates a new `PhoneNumber` value object
+    pub fn new(value: impl Into<String>) -> Result<Self, DomainError> {
+        let value = value.into();
+
+        if value.trim().is_empty() {
+            return Err(DomainError::validation("Phone number cannot be empty"));
+        }
+
+        // Only digits, spaces, +, -, parentheses allowed
+        if !value
+            .chars()
+            .all(|c| c.is_ascii_digit() || "+- ()".contains(c))
+        {
+            return Err(DomainError::validation(
+                "Phone number contains invalid characters",
+            ));
+        }
+
+        Ok(Self(value))
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+}
+
+/// Physical address of the business
+///
+/// # Field
+/// - `value` - raw string value
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(transparent)]
+pub struct PhysicalAddress(String);
+
+impl PhysicalAddress {
+    pub fn new(value: impl Into<String>) -> Result<Self, DomainError> {
+        let value = value.into();
+
+        if value.trim().is_empty() {
+            return Err(DomainError::validation("Address cannot be empty"));
+        }
+
+        if value.len() > 200 {
+            return Err(DomainError::validation(
+                "Address is too long (max 200 chars)",
+            ));
+        }
+
+        Ok(Self(value))
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+}
+
+/// Website URL
+///
+/// # Field
+/// - `value` - raw string value
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(transparent)]
+pub struct WebsiteUrl(String);
+
+impl WebsiteUrl {
+    pub fn new(value: impl Into<String>) -> Result<Self, DomainError> {
+        let value = value.into();
+
+        if value.trim().is_empty() {
+            return Err(DomainError::validation("Website URL cannot be empty"));
+        }
+
+        if !(value.starts_with("http://") || value.starts_with("https://")) {
+            return Err(DomainError::validation(
+                "Website URL must start with http:// or https://",
+            ));
+        }
+
+        Ok(Self(value))
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+}
+
+/// Generic social media URL
+///
+/// # Field
+/// - `value` - URL string
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(transparent)]
+pub struct SocialMediaLink(String);
+
+impl SocialMediaLink {
+    pub fn new(value: impl Into<String>) -> Result<Self, DomainError> {
+        let value = value.into();
+
+        if value.trim().is_empty() {
+            return Err(DomainError::validation("Social media link cannot be empty"));
+        }
+
+        if !(value.starts_with("http://") || value.starts_with("https://")) {
+            return Err(DomainError::validation(
+                "Social media link must start with http:// or https://",
+            ));
+        }
+
+        Ok(Self(value))
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+}
+/// Social media platform name
+///
+/// # Field
+/// - `value` - platform name (e.g., "Pinterest")
+#[derive(Debug, Clone, PartialEq, Eq, Serialize,Hash, Deserialize)]
+#[serde(transparent)]
+pub struct SocialPlatformName(String);
+
+impl SocialPlatformName {
+    pub fn new(value: impl Into<String>) -> Result<Self, DomainError> {
+        let value = value.into();
+        let trimmed = value.trim();
+
+        if trimmed.is_empty() {
+            return Err(DomainError::validation("Platform name cannot be empty"));
+        }
+
+        if trimmed.len() > 30 {
+            return Err(DomainError::validation(
+                "Platform name too long (max 30 chars)",
+            ));
+        }
+
+        Ok(Self(trimmed.to_string()))
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+}
+
+
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SocialMedia {
+    pub facebook: Option<SocialMediaLink>,
+    pub instagram: Option<SocialMediaLink>,
+    pub twitter: Option<SocialMediaLink>,
+    pub tiktok: Option<SocialMediaLink>,
+    pub linkedin: Option<SocialMediaLink>,
+    pub youtube: Option<SocialMediaLink>,
+
+    /// Additional platforms:
+    /// Key = platform name (validated)
+    /// Value = link (validated)
+    pub other: HashMap<SocialPlatformName, SocialMediaLink>,
+}
+
+impl SocialMedia {
+    pub fn new(
+        facebook: Option<SocialMediaLink>,
+        instagram: Option<SocialMediaLink>,
+        twitter: Option<SocialMediaLink>,
+        tiktok: Option<SocialMediaLink>,
+        linkedin: Option<SocialMediaLink>,
+        youtube: Option<SocialMediaLink>,
+        other: HashMap<SocialPlatformName, SocialMediaLink>,
+    ) -> Self {
+        Self {
+            facebook,
+            instagram,
+            twitter,
+            tiktok,
+            linkedin,
+            youtube,
+            other,
+        }
+    }
+}
+
+
+/// A descriptive business tag
+///
+/// # Field
+/// - `value` - tag label
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Hash, Deserialize)]
+#[serde(transparent)]
+pub struct Tag(String);
+
+impl Tag {
+    pub fn new(value: impl Into<String>) -> Result<Self, DomainError> {
+        let value = value.into();
+
+        if value.trim().is_empty() {
+            return Err(DomainError::validation("Tag cannot be empty"));
+        }
+
+        if value.len() > 30 {
+            return Err(DomainError::validation("Tag too long (max 30 chars)"));
+        }
+
+        Ok(Self(value))
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+}
