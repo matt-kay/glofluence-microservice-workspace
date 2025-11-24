@@ -1,4 +1,4 @@
-use async_graphql::{Context, ErrorExtensions, Object, Result};
+use async_graphql::{Context, Object, Result};
 use corelib::predule::{TaxonomyId, TermDescription, TermId, TermName};
 use uuid::Uuid;
 
@@ -17,24 +17,13 @@ impl Mutation {
         let mut term_service = app_state.term_service.lock().await;
 
         let taxonomy_id = TaxonomyId::from_uuid(input.taxonomy_id);
-        let parent_id = input.parent_id.map(|v| TermId::from_uuid(v));
 
-        let name = TermName::new(input.name).map_err(|err| {
-            err.extend_with(|_, e| {
-                e.set("code", 400);
-                e.set("message", err.to_string());
-            })
-        })?;
+        let parent_id = input.parent_id.map(TermId::from_uuid);
 
-        let description = match input.description {
-            Some(v) => Some(TermDescription::new(v).map_err(|err| {
-                err.extend_with(|_, e| {
-                    e.set("code", 400);
-                    e.set("message", err.to_string());
-                })
-            })?),
-            None => None,
-        };
+        let name = TermName::new(input.name)?;
+
+        let description = input.description.map(TermDescription::new).transpose()?;
+
         let visible = input.visible;
         // Save term via service
         let domain_term = term_service
@@ -59,30 +48,15 @@ impl Mutation {
 
         let t_id = TermId::from_uuid(term_id);
 
-        let taxonomy_id = input.taxonomy_id.map(|v| TaxonomyId::from_uuid(v));
+        let taxonomy_id = input.taxonomy_id.map(TaxonomyId::from_uuid);
 
-        let parent_id = input.parent_id.map(|v| TermId::from_uuid(v));
+        let parent_id = input.parent_id.map(TermId::from_uuid);
 
-        let name = match input.name {
-            Some(v) => Some(TermName::new(v).map_err(|err| {
-                err.extend_with(|_, e| {
-                    e.set("code", 400);
-                    e.set("message", err.to_string());
-                })
-            })?),
-            None => None,
-        };
+        let name = input.name.map(TermName::new).transpose()?;
 
-        let description = match input.description {
-            Some(v) => Some(TermDescription::new(v).map_err(|err| {
-                err.extend_with(|_, e| {
-                    e.set("code", 400);
-                    e.set("message", err.to_string());
-                })
-            })?),
-            None => None,
-        };
-        let visible = input.visible.map(|v|v);
+        let description = input.description.map(TermDescription::new).transpose()?;
+
+        let visible = input.visible.map(|v| v);
         // Save term via service
         let domain_term = term_service
             .update_term(t_id, taxonomy_id, parent_id, name, visible, description)

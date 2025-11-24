@@ -1,4 +1,4 @@
-use async_graphql::{Context, ErrorExtensions, Object, Result};
+use async_graphql::{Context, Object, Result};
 use corelib::predule::{TaxonomyDescription, TaxonomyId, TaxonomyName};
 use uuid::Uuid;
 
@@ -20,24 +20,12 @@ impl Mutation {
 
         let mut taxonomy_service = app_state.taxonomy_service.lock().await;
 
-        let parent_id = input.parent_id.map(|v| TaxonomyId::from_uuid(v));
+        let parent_id = input.parent_id.map(TaxonomyId::from_uuid);
 
-        let name = TaxonomyName::new(input.name).map_err(|err| {
-            err.extend_with(|_, e| {
-                e.set("code", 400);
-                e.set("message", err.to_string());
-            })
-        })?;
+        let name = TaxonomyName::new(input.name)?;
 
-        let description = match input.description {
-            Some(v) => Some(TaxonomyDescription::new(v).map_err(|err| {
-                err.extend_with(|_, e| {
-                    e.set("code", 400);
-                    e.set("message", err.to_string());
-                })
-            })?),
-            None => None,
-        };
+        let description =  input.description.map(TaxonomyDescription::new).transpose()?;
+
         let visible = input.visible;
         // Save taxonomy via service
         let domain_taxonomy = taxonomy_service
@@ -62,27 +50,15 @@ impl Mutation {
 
         let t_id = TaxonomyId::from_uuid(taxonomy_id);
 
-        let parent_id = input.parent_id.map(|v| TaxonomyId::from_uuid(v));
+        let parent_id = input.parent_id.map(TaxonomyId::from_uuid);
 
-        let name = match input.name {
-            Some(v) => Some(TaxonomyName::new(v).map_err(|err| {
-                err.extend_with(|_, e| {
-                    e.set("code", 400);
-                    e.set("message", err.to_string());
-                })
-            })?),
-            None => None,
-        };
+        let name = input.name.map(TaxonomyName::new).transpose()?;
 
-        let description = match input.description {
-            Some(v) => Some(TaxonomyDescription::new(v).map_err(|err| {
-                err.extend_with(|_, e| {
-                    e.set("code", 400);
-                    e.set("message", err.to_string());
-                })
-            })?),
-            None => None,
-        };
+        let description = input
+            .description
+            .map(TaxonomyDescription::new)
+            .transpose()?;
+
         let visible = input.visible.map(|v| v);
         // Save taxonomy via service
         let domain_taxonomy = taxonomy_service
