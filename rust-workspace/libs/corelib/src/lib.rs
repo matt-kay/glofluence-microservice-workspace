@@ -12,6 +12,7 @@ pub mod predule {
     pub use crate::domain::shared::value_object::SocialMediaMetadata;
     pub use crate::domain::shared::value_object::SocialMediaPlatform;
     pub use crate::domain::shared::value_object::SocialPlatformName;
+    pub use crate::domain::shared::value_object::SocialMediaProfiles;
     pub use crate::domain::shared::value_object::Tag;
     pub use crate::domain::shared::value_object::WebsiteUrl;
     pub use crate::domain::shared::value_object::EmailAddress;

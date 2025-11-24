@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use async_graphql::InputObject;
 use bin_shared_kernel::predule::SocialProfileInput;
 use uuid::Uuid;
@@ -7,8 +9,8 @@ pub struct CreateUserInput {
     pub first_name: String,
     pub last_name: String,
     pub country_term_id: Uuid,
-    pub social_profiles: Vec<SocialProfileInput>,
-    pub demographics: String,
+    pub social_profiles: Option<Vec<SocialProfileInput>>,
+    pub demographics: Option<HashMap<Uuid, Vec<Uuid>>>,
 }
 
 #[derive(InputObject)]
@@ -17,5 +19,5 @@ pub struct UpdateUserInput {
     pub last_name: Option<String>,
     pub country_term_id: Option<Uuid>,
     pub social_profiles: Option<Vec<SocialProfileInput>>,
-    pub demographics: Option<String>,
+    pub demographics: Option<HashMap<Uuid, Vec<Uuid>>>,
 }

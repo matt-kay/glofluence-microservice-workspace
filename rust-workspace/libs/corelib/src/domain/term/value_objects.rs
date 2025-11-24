@@ -1,3 +1,4 @@
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::domain::shared::error::DomainError;
@@ -6,7 +7,7 @@ use crate::domain::shared::error::DomainError;
 /// # Field
 /// - `value`- raw uuid v4 value.
 
-#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash, PartialOrd, Ord)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash, PartialOrd, Ord, Deserialize, Serialize)]
 pub struct TermId(Uuid);
 
 impl TermId {

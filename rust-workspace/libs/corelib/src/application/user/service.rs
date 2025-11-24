@@ -1,11 +1,9 @@
-use std::collections::HashMap;
-
 use crate::{
     domain::{
         shared::{
             error::DomainError,
             event::EventMeta,
-            value_object::{EventId, OcurredAt, SocialMediaProfiles},
+            value_object::{Demographics, EventId, OcurredAt, SocialMediaProfiles},
         },
         term::value_objects::TermId,
         user::{
@@ -46,15 +44,10 @@ impl<R: UserRepository> UserService<R> {
         first_name: FirstName,
         last_name: LastName,
         country_term_id: TermId,
+        social_profiles: Option<SocialMediaProfiles>,
+        demographics: Option<Demographics>,
     ) -> Result<User, DomainError> {
         let id = UserId::new();
-
-        let social_profiles = SocialMediaProfiles::new(vec![
-            // SocialMediaMetadata::new(SocialMediaPlatform::Facebook, "AliceFB", "https://fb.com/alice", false, false, 100, None).unwrap(),
-            // SocialMediaMetadata::new(SocialMediaPlatform::Instagram, "AliceIG", "https://instagram.com/alice", false, false, 250, None).unwrap(),
-        ]);
-
-        let demographics = HashMap::new();
 
         let mut user = User::new(
             id,
@@ -80,6 +73,8 @@ impl<R: UserRepository> UserService<R> {
         first_name: Option<FirstName>,
         last_name: Option<LastName>,
         country_term_id: Option<TermId>,
+        social_profiles: Option<SocialMediaProfiles>,
+        demographics: Option<Demographics>,
     ) -> Result<User, DomainError> {
         let mut user = self
             .repo
@@ -97,6 +92,12 @@ impl<R: UserRepository> UserService<R> {
 
         if let Some(c) = country_term_id {
             user.set_country(c);
+        }
+        if let Some(s) = social_profiles {
+            user.set_social_profiles(s);
+        }
+        if let Some(d) = demographics {
+            user.set_demographics(d);
         }
 
         self.repo.save(&user).await?;

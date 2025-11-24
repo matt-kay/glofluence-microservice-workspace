@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::fmt;
 use uuid::Uuid;
 
-use crate::domain::{shared::error::DomainError, taxonomy::value_objects::TaxonomyId};
+use crate::{domain::{shared::error::DomainError, taxonomy::value_objects::TaxonomyId}, predule::TermId};
 use std::collections::HashMap;
 
 /// Unique identifier for event
@@ -243,7 +243,7 @@ impl fmt::Display for Deleted {
     }
 }
 
-pub type Demographics = HashMap<TaxonomyId, Vec<String>>;
+pub type Demographics = HashMap<TaxonomyId, Vec<TermId>>;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum SocialMediaPlatform {

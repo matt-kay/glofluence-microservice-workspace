@@ -34,8 +34,8 @@ pub struct User {
     pub last_name: LastName,
     pub country_term_id: TermId,
 
-    pub social_profiles: SocialMediaProfiles,
-    pub demographics: Demographics,
+    pub social_profiles: Option<SocialMediaProfiles>,
+    pub demographics: Option<Demographics>,
 
     pub timestamps: Timestamp,
     pub deleted: Deleted,
@@ -51,8 +51,8 @@ impl User {
         first_name: FirstName,
         last_name: LastName,
         country_term_id: TermId,
-        social_profiles: SocialMediaProfiles,
-        demographics: Demographics,
+        social_profiles: Option<SocialMediaProfiles>,
+        demographics: Option<Demographics>,
     ) -> Self {
         let mut user = User {
             id,
@@ -118,7 +118,7 @@ impl User {
         });
     }
     pub fn set_social_profiles(&mut self, social_profiles: SocialMediaProfiles) {
-        self.social_profiles = social_profiles.clone();
+        self.social_profiles = Some(social_profiles.clone());
         self.touch();
         self.pending_events
             .push(UserDomainEvent::UserSocialProfileUpdated {
@@ -129,7 +129,7 @@ impl User {
     }
 
     pub fn set_demographics(&mut self, demographics: Demographics) {
-        self.demographics = demographics.clone();
+        self.demographics = Some(demographics.clone());
         self.touch();
         self.pending_events
             .push(UserDomainEvent::UserDemographicsUpdated {

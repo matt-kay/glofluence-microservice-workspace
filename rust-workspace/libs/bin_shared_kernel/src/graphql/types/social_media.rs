@@ -1,5 +1,8 @@
+use std::collections::HashMap;
+
 use async_graphql::{Enum, SimpleObject};
 use corelib::predule::{SocialMediaMetadata, SocialMediaPlatform};
+use uuid::Uuid;
 
 #[derive(Enum, Clone, Copy, PartialEq, Eq)]
 pub enum SocialProfilePlatform {
@@ -24,15 +27,28 @@ impl From<SocialMediaPlatform> for SocialProfilePlatform {
     }
 }
 
+impl From<SocialProfilePlatform> for SocialMediaPlatform {
+    fn from(platform: SocialProfilePlatform) -> Self {
+        match platform {
+            SocialProfilePlatform::Facebook => SocialMediaPlatform::Facebook,
+            SocialProfilePlatform::Instagram => SocialMediaPlatform::Instagram,
+            SocialProfilePlatform::TikTok => SocialMediaPlatform::TikTok,
+            SocialProfilePlatform::X => SocialMediaPlatform::X,
+            SocialProfilePlatform::Youtube => SocialMediaPlatform::Youtube,
+            SocialProfilePlatform::LinkedIn => SocialMediaPlatform::LinkedIn,
+        }
+    }
+}
+
 #[derive(SimpleObject)]
 pub struct SocialProfile {
-    platform: SocialProfilePlatform,
-    profile_name: String,
-    profile_link: String,
-    mark_for_verification: bool,
-    is_verified: bool,
-    follower_count: u64,
-    // demographics: Option<Demographics>,
+    pub platform: SocialProfilePlatform,
+    pub profile_name: String,
+    pub profile_link: String,
+    pub mark_for_verification: bool,
+    pub is_verified: bool,
+    pub follower_count: u64,
+    pub demographics: Option<HashMap<Uuid, Vec<Uuid>>>,
 }
 
 // From implementation for owned value
@@ -52,6 +68,16 @@ impl From<&SocialMediaMetadata> for SocialProfile {
             mark_for_verification: value.mark_for_verification(),
             is_verified: value.is_verified(),
             follower_count: value.follower_count(),
+            demographics: value.demographics().map(|v| {
+                v.iter()
+                    .map(|(tax_id, terms)| {
+                        (
+                            tax_id.as_uuid(),
+                            terms.iter().map(|t| t.as_uuid()).collect(),
+                        )
+                    })
+                    .collect::<HashMap<Uuid, Vec<Uuid>>>()
+            }),
         }
     }
 }
