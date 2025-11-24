@@ -1,0 +1,18 @@
+use env_config::predule::{DatabaseConfig, ServerConfig};
+
+
+pub struct EnvConfig {
+    pub server: ServerConfig,
+    pub database: DatabaseConfig,
+}
+
+impl EnvConfig {
+    pub fn load() -> Self {
+        dotenvy::dotenv().ok();
+
+        Self {
+            server: ServerConfig::load("BUSINESS_SUBGRAPH"),
+            database: DatabaseConfig::load(),
+        }
+    }
+}

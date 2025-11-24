@@ -29,33 +29,26 @@ impl UserId {
 }
 
 /// First name of a user
-///
-/// # Field
-/// - `value` - raw string value
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct FirstName(String);
 
 impl FirstName {
-    /// Creates a new `FirstName` value object
-    ///
-    /// # Errors
-    /// Returns `DomainError::InvalidInput` if the value is empty or too long
     pub fn new(value: impl Into<String>) -> Result<Self, DomainError> {
         let value = value.into();
+        let trimmed = value.trim();
 
-        // Basic validation
-        if value.trim().is_empty() {
+        if trimmed.is_empty() {
             return Err(DomainError::validation("First name cannot be empty"));
         }
 
-        if value.len() > 50 {
+        if trimmed.chars().count() > 50 {
             return Err(DomainError::validation(
                 "First name is too long (max 50 chars)",
             ));
         }
 
-        // Optionally: allow only alphabetic characters
-        if !value
+        // Allow Unicode letters, dash, or apostrophe
+        if !trimmed
             .chars()
             .all(|c| c.is_alphabetic() || c == '-' || c == '\'')
         {
@@ -64,44 +57,34 @@ impl FirstName {
             ));
         }
 
-        Ok(Self(value))
+        Ok(Self(trimmed.to_string()))
     }
 
-    /// Returns the string value of the first name
     pub fn as_str(&self) -> &str {
         &self.0
     }
 }
 
 /// Last name of a user
-///
-/// # Field
-/// - `value` - raw string value
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LastName(String);
 
 impl LastName {
-    /// Creates a new `LastName` value object
-    ///
-    /// # Errors
-    /// Returns `DomainError::InvalidInput` if the value is empty, too long, or contains invalid characters
     pub fn new(value: impl Into<String>) -> Result<Self, DomainError> {
         let value = value.into();
+        let trimmed = value.trim();
 
-        // Validation: not empty
-        if value.trim().is_empty() {
+        if trimmed.is_empty() {
             return Err(DomainError::validation("Last name cannot be empty"));
         }
 
-        // Validation: max length (example: 50)
-        if value.len() > 50 {
+        if trimmed.chars().count() > 50 {
             return Err(DomainError::validation(
                 "Last name is too long (max 50 chars)",
             ));
         }
 
-        // Validation: only alphabetic, dash, or apostrophe
-        if !value
+        if !trimmed
             .chars()
             .all(|c| c.is_alphabetic() || c == '-' || c == '\'')
         {
@@ -110,10 +93,9 @@ impl LastName {
             ));
         }
 
-        Ok(Self(value))
+        Ok(Self(trimmed.to_string()))
     }
 
-    /// Returns the string value of the last name
     pub fn as_str(&self) -> &str {
         &self.0
     }

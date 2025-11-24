@@ -43,9 +43,9 @@ impl<R: BusinessRepository> BusinessService<R> {
         &mut self,
         name: BusinessName,
         description: Option<BusinessDescription>,
-        contact_info: ContactInfo,
-        social_media: SocialMedia,
-        features: BusinessFeatures,
+        contact_info: Option<ContactInfo>,
+        social_media: Option<SocialMedia>,
+        features: Option<BusinessFeatures>,
     ) -> Result<Business, DomainError> {
         let id = BusinessId::new();
 
@@ -81,17 +81,17 @@ impl<R: BusinessRepository> BusinessService<R> {
         }
 
         if let Some(v) = description {
-            business.set_description(v);
+            business.set_description(Some(v));
         }
 
         if let Some(v) = contact_info {
-            business.set_contact_info(v);
+            business.set_contact_info(Some(v));
         }
         if let Some(v) = social_media {
-            business.set_social_media(v);
+            business.set_social_media(Some(v));
         }
         if let Some(v) = features {
-            business.set_features(v);
+            business.set_features(Some(v));
         }
 
         self.repo.save(&business).await?;

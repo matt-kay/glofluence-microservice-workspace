@@ -1,6 +1,6 @@
 pub mod events;
-pub mod value_objects;
 pub mod ports;
+pub mod value_objects;
 
 use crate::domain::{
     business::{
@@ -21,9 +21,9 @@ pub struct Business {
 
     pub name: BusinessName,
     pub description: Option<BusinessDescription>,
-    pub contact_info: ContactInfo,
-    pub social_media: SocialMedia,
-    pub features: BusinessFeatures,
+    pub contact_info: Option<ContactInfo>,
+    pub social_media: Option<SocialMedia>,
+    pub features: Option<BusinessFeatures>,
 
     pub timestamps: Timestamp,
     pub deleted: Deleted,
@@ -39,9 +39,9 @@ impl Business {
 
         name: BusinessName,
         description: Option<BusinessDescription>,
-        contact_info: ContactInfo,
-        social_media: SocialMedia,
-        features: BusinessFeatures,
+        contact_info: Option<ContactInfo>,
+        social_media: Option<SocialMedia>,
+        features: Option<BusinessFeatures>,
     ) -> Self {
         let mut business = Business {
             id,
@@ -91,9 +91,9 @@ impl Business {
             });
     }
 
-    pub fn set_description(&mut self, description: BusinessDescription) {
+    pub fn set_description(&mut self, description: Option<BusinessDescription>) {
         let previous_description = description.clone();
-        self.description = Some(description.clone());
+        self.description = description.clone();
         self.touch();
         self.pending_events
             .push(BusinessDomainEvent::BusinessDetailsUpdated {
@@ -101,12 +101,12 @@ impl Business {
                 event_name: "business.details.update".to_owned(),
                 previous_name: None,
                 latest_name: None,
-                previous_description: Some(description.to_owned()),
-                latest_description: Some(description.to_owned()),
+                previous_description: previous_description,
+                latest_description: description.to_owned(),
             });
     }
 
-    pub fn set_contact_info(&mut self, contact_info: ContactInfo) {
+    pub fn set_contact_info(&mut self, contact_info: Option<ContactInfo>) {
         let previous_contact_info = contact_info.clone();
         self.contact_info = contact_info.clone();
         self.touch();
@@ -119,7 +119,7 @@ impl Business {
             });
     }
 
-    pub fn set_social_media(&mut self, social_media: SocialMedia) {
+    pub fn set_social_media(&mut self, social_media: Option<SocialMedia>) {
         let previous_social_media = social_media.clone();
         self.social_media = social_media.clone();
         self.touch();
@@ -132,7 +132,7 @@ impl Business {
             });
     }
 
-    pub fn set_features(&mut self, features: BusinessFeatures) {
+    pub fn set_features(&mut self, features: Option<BusinessFeatures>) {
         let previous_features = features.clone();
         self.features = features.clone();
         self.touch();

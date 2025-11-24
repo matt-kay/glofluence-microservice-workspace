@@ -5,9 +5,7 @@ use uuid::Uuid;
 
 use crate::domain::shared::{
     error::DomainError,
-    value_object::{
-        EmailAddress, PhoneNumber, PhysicalAddress, SocialMediaLink, SocialPlatformName, Tag, WebsiteUrl
-    },
+    value_object::{EmailAddress, PhoneNumber, PhysicalAddress, Tag, WebsiteUrl},
 };
 
 /// Unique identifier for business
@@ -49,32 +47,38 @@ impl BusinessName {
     /// Creates a new `BusinessName` value object
     ///
     /// # Errors
-    /// Returns `DomainError::InvalidInput` if the value is empty or too long
+    /// Returns `DomainError::validation` if the value is empty, too long, or contains invalid characters
     pub fn new(value: impl Into<String>) -> Result<Self, DomainError> {
         let value = value.into();
+        let trimmed = value.trim();
 
         // Basic validation
-        if value.trim().is_empty() {
+        if trimmed.is_empty() {
             return Err(DomainError::validation("Business name cannot be empty"));
         }
 
-        if value.len() > 50 {
+        if trimmed.len() > 100 {
             return Err(DomainError::validation(
-                "Business name is too long (max 50 chars)",
+                "Business name is too long (max 100 chars)",
             ));
         }
 
-        // Optionally: allow only alphabetic characters
-        if !value
-            .chars()
-            .all(|c| c.is_alphabetic() || c == '-' || c == '\'')
-        {
+        // Allow letters, numbers, spaces, hyphens, apostrophes, and common punctuation
+        if !trimmed.chars().all(|c| {
+            c.is_alphanumeric()
+                || c == '-'
+                || c == '\''
+                || c == '&'
+                || c == ','
+                || c == '.'
+                || c.is_whitespace()
+        }) {
             return Err(DomainError::validation(
                 "Business name contains invalid characters",
             ));
         }
 
-        Ok(Self(value))
+        Ok(Self(trimmed.to_string()))
     }
 
     /// Returns the string value of the business name
@@ -92,37 +96,38 @@ impl BusinessName {
 pub struct BusinessDescription(String);
 
 impl BusinessDescription {
-    /// Creates a new `BusinessName` value object
+    /// Creates a new `BusinessDescription` value object
     ///
     /// # Errors
-    /// Returns `DomainError::InvalidInput` if the value is empty or too long
+    /// Returns `DomainError::validation` if the value is empty or too long
     pub fn new(value: impl Into<String>) -> Result<Self, DomainError> {
         let value = value.into();
 
         // Basic validation
-        if value.trim().is_empty() {
+        let trimmed = value.trim();
+        if trimmed.is_empty() {
             return Err(DomainError::validation(
                 "Business description cannot be empty",
             ));
         }
 
-        if value.len() > 50 {
+        if trimmed.len() > 1000 {
             return Err(DomainError::validation(
-                "Business description is too long (max 50 chars)",
+                "Business description is too long (max 1000 chars)",
             ));
         }
 
-        // Optionally: allow only alphabetic characters
-        if !value
+        // Optional: allow any printable characters (letters, numbers, punctuation, spaces, line breaks)
+        if !trimmed
             .chars()
-            .all(|c| c.is_alphabetic() || c == '-' || c == '\'')
+            .all(|c| c.is_ascii_graphic() || c.is_ascii_whitespace())
         {
             return Err(DomainError::validation(
                 "Business description contains invalid characters",
             ));
         }
 
-        Ok(Self(value))
+        Ok(Self(trimmed.to_string()))
     }
 
     /// Returns the string value of the business description
@@ -260,28 +265,27 @@ impl ContactInfo {
     }
 }
 
-
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BusinessFeatures {
     /// Example: Mon -> "9am–5pm"
     pub hours: Option<Vec<BusinessHourEntry>>,
 
     /// Services provided by the business
-    pub services: Vec<ServiceName>,
+    pub services: Option<Vec<ServiceName>>,
 
     /// Descriptive tags
-    pub tags: Vec<Tag>,
+    pub tags: Option<Vec<Tag>>,
 
     /// Custom metadata
-    pub extra: HashMap<ExtraFeatureKey, ExtraFeatureValue>,
+    pub extra: Option<HashMap<ExtraFeatureKey, ExtraFeatureValue>>,
 }
 
 impl BusinessFeatures {
     pub fn new(
         hours: Option<Vec<BusinessHourEntry>>,
-        services: Vec<ServiceName>,
-        tags: Vec<Tag>,
-        extra: HashMap<ExtraFeatureKey, ExtraFeatureValue>,
+        services: Option<Vec<ServiceName>>,
+        tags: Option<Vec<Tag>>,
+        extra: Option<HashMap<ExtraFeatureKey, ExtraFeatureValue>>,
     ) -> Self {
         Self {
             hours,
@@ -291,3 +295,4 @@ impl BusinessFeatures {
         }
     }
 }
+

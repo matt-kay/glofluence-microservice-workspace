@@ -605,7 +605,7 @@ pub struct SocialMedia {
     /// Additional platforms:
     /// Key = platform name (validated)
     /// Value = link (validated)
-    pub other: HashMap<SocialPlatformName, SocialMediaLink>,
+    pub other: Option<HashMap<SocialPlatformName, SocialMediaLink>>,
 }
 
 impl SocialMedia {
@@ -616,7 +616,7 @@ impl SocialMedia {
         tiktok: Option<SocialMediaLink>,
         linkedin: Option<SocialMediaLink>,
         youtube: Option<SocialMediaLink>,
-        other: HashMap<SocialPlatformName, SocialMediaLink>,
+        other: Option<HashMap<SocialPlatformName, SocialMediaLink>>,
     ) -> Self {
         Self {
             facebook,

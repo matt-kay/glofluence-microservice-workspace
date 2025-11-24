@@ -1,0 +1,42 @@
+{
+  "input": {
+    "name": "Business Name",
+    "description": "A brief description of the business, what it offers, and its values.",
+    "contactInfo": {
+      "email": "info@business.com",
+      "phone": "+1-555-123-4567",
+      "address": "123 Main Street, Cityville, CA 12345",
+      "website": "https://www.business.com"
+    },
+    "socialMedia": {
+      "facebook": "https://www.facebook.com/business",
+      "instagram": "https://www.instagram.com/business",
+      "twitter": "https://twitter.com/business",
+      "tiktok": "https://www.tiktok.com/@business",
+      "linkedin": "https://www.linkedin.com/company/business",
+      "youtube": "https://www.youtube.com/business",
+      "other": {
+        "pinterest": "https://www.pinterest.com/business",
+        "snapchat": "https://www.snapchat.com/add/business"
+      }
+    },
+    "features": {
+      "hours": [
+        { "day": "Monday", "hours": "9:00 AM - 5:00 PM" },
+        { "day": "Tuesday", "hours": "9:00 AM - 5:00 PM" },
+        { "day": "Wednesday", "hours": "9:00 AM - 5:00 PM" },
+        { "day": "Thursday", "hours": "9:00 AM - 5:00 PM" },
+        { "day": "Friday", "hours": "9:00 AM - 5:00 PM" },
+        { "day": "Saturday", "hours": "10:00 AM - 4:00 PM" },
+        { "day": "Sunday", "hours": "Closed" }
+      ],
+      "services": ["Consulting", "Product Sales", "Customer Support"],
+      "tags": ["Local", "Premium", "Family-Owned"],
+      "extra": {
+        "parking": "Available on-site",
+        "wifi": "Free for customers",
+        "pets": "Pet-friendly"
+      }
+    }
+  }
+}

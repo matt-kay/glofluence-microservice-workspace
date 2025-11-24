@@ -16,9 +16,9 @@ pub enum BusinessDomainEvent {
 
         name: BusinessName,
         description: Option<BusinessDescription>,
-        contact_info: ContactInfo,
-        social_media: SocialMedia,
-        features: BusinessFeatures,
+        contact_info: Option<ContactInfo>,
+        social_media: Option<SocialMedia>,
+        features: Option<BusinessFeatures>,
     },
 
     /// Business name or description changed
@@ -38,8 +38,8 @@ pub enum BusinessDomainEvent {
         meta: EventMeta,
         event_name: String,
 
-        previous: ContactInfo,
-        latest: ContactInfo,
+        previous: Option<ContactInfo>,
+        latest: Option<ContactInfo>,
     },
 
     /// Social media links changed
@@ -47,8 +47,8 @@ pub enum BusinessDomainEvent {
         meta: EventMeta,
         event_name: String,
 
-        previous: SocialMedia,
-        latest: SocialMedia,
+        previous: Option<SocialMedia>,
+        latest: Option<SocialMedia>,
     },
 
     /// Business features metadata changed
@@ -56,8 +56,8 @@ pub enum BusinessDomainEvent {
         meta: EventMeta,
         event_name: String,
 
-        previous: BusinessFeatures,
-        latest: BusinessFeatures,
+        previous: Option<BusinessFeatures>,
+        latest: Option<BusinessFeatures>,
     },
 
     /// Business permanently deleted
