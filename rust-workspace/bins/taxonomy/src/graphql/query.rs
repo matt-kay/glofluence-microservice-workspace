@@ -27,12 +27,12 @@ impl Query {
     }
 
     /// Get many  Taxonomy
-    async fn get_terms(&self) -> &'static str {
-        "get terms"
+    async fn get_taxonomy(&self) -> &'static str {
+        "get taxonomy"
     }
 
     /// Search  Taxonomy
-    async fn search_terms(&self) -> &'static str {
-        "search terms"
+    async fn search_taxonomy(&self) -> &'static str {
+        "search taxonomy"
     }
 }

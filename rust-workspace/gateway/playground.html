@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Glofluence Supergraph Playground</title>
+    <style>
+        html,
+        body,
+        #embedded-sandbox {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+
+    <script
+        src="https://embeddable-sandbox.cdn.apollographql.com/_latest/embeddable-sandbox.umd.production.min.js"></script>
+</head>
+
+<body>
+    <div id="embedded-sandbox"></div>
+
+    <script>
+        new window.EmbeddedSandbox({
+            target: "#embedded-sandbox",
+            initialEndpoint: "http://127.0.0.1:4000/",
+            endpointIsEditable: true,
+            initialState: {
+                document: "query { __typename }",
+            },
+        });
+    </script>
+</body>
+
+</html>

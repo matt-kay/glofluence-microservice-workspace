@@ -1,0 +1,21 @@
+format: "1"
+subgraphs:
+  user:
+    routing_url: http://localhost:3001
+    schema:
+      file: ../schemas/user.graphql
+
+  term:
+    routing_url: http://localhost:3002
+    schema:
+      file: ../schemas/term.graphql
+  
+  taxonomy:
+    routing_url: http://localhost:3003
+    schema:
+      file: ../schemas/taxonomy.graphql
+  
+  business:
+    routing_url: http://localhost:3004
+    schema:
+      file: ../schemas/business.graphql

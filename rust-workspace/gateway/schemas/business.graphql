@@ -1,0 +1,177 @@
+type Business @key(fields: "id") {
+	id: ID!
+	name: String!
+	description: String
+	contactInfo: ContactInfo
+	socialMedia: SocialMedia
+	features: BusinessFeatures
+	createdAt: String!
+	updatedAt: String!
+	deleted: Boolean!
+	deletetionStatus: String
+	version: Int!
+}
+
+type BusinessFeatures {
+	"""
+	Example: Mon -> "9am–5pm"
+	"""
+	hours: [BusinessHourEntry!]
+	"""
+	Services provided by the business
+	"""
+	services: [String!]!
+	"""
+	Descriptive tags
+	"""
+	tags: [String!]!
+	"""
+	Custom metadata
+	"""
+	extra: JSONObject!
+}
+
+input BusinessFeaturesInput {
+	"""
+	Example: Mon -> "9am–5pm"
+	"""
+	hours: [BusinessHourEntryInput!]
+	"""
+	Services provided by the business
+	"""
+	services: [String!]
+	"""
+	Descriptive tags
+	"""
+	tags: [String!]
+	"""
+	Custom metadata
+	"""
+	extra: JSONObject
+}
+
+type BusinessHourEntry {
+	day: String!
+	hours: String!
+}
+
+input BusinessHourEntryInput {
+	day: String!
+	hours: String!
+}
+
+type ContactInfo {
+	email: String
+	phone: String
+	address: String
+	website: String
+}
+
+input ContactInfoInput {
+	email: String
+	phone: String
+	address: String
+	website: String
+}
+
+input CreateBusinessInput {
+	name: String!
+	description: String
+	contactInfo: ContactInfoInput
+	socialMedia: SocialMediaInput
+	features: BusinessFeaturesInput
+}
+
+"""
+A scalar that can represent any JSON Object value.
+"""
+scalar JSONObject
+
+type Mutation {
+	"""
+	Create a Business
+	"""
+	createBusiness(input: CreateBusinessInput!): Business!
+	"""
+	Update a Business
+	"""
+	updateBusiness(businessId: UUID!, input: UpdateBusinessInput!): Business!
+	"""
+	Soft Delete a Business
+	"""
+	softDeleteBusiness(businessId: UUID!): UUID!
+	"""
+	Permanetly Delete a Business
+	"""
+	permanetlyDeleteBusiness(businessId: UUID!): String!
+}
+
+type Query {
+	"""
+	Get many  Business
+	"""
+	getBusinesss: String!
+	"""
+	Search  Business
+	"""
+	searchBusinesss: String!
+}
+
+type SocialMedia {
+	facebook: String
+	instagram: String
+	twitter: String
+	tiktok: String
+	linkedin: String
+	youtube: String
+	other: JSONObject!
+}
+
+input SocialMediaInput {
+	facebook: String
+	instagram: String
+	twitter: String
+	tiktok: String
+	linkedin: String
+	youtube: String
+	other: JSONObject
+}
+
+"""
+A UUID is a unique 128-bit number, stored as 16 octets. UUIDs are parsed as
+Strings within GraphQL. UUIDs are used to assign unique identifiers to
+entities without requiring a central allocating authority.
+
+# References
+
+* [Wikipedia: Universally Unique Identifier](http://en.wikipedia.org/wiki/Universally_unique_identifier)
+* [RFC4122: A Universally Unique Identifier (UUID) URN Namespace](http://tools.ietf.org/html/rfc4122)
+"""
+scalar UUID
+
+input UpdateBusinessInput {
+	name: String
+	description: String
+	contactInfo: ContactInfoInput
+	socialMedia: SocialMediaInput
+	features: BusinessFeaturesInput
+}
+
+"""
+Directs the executor to include this field or fragment only when the `if` argument is true.
+"""
+directive @include(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+"""
+Directs the executor to skip this field or fragment when the `if` argument is true.
+"""
+directive @skip(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+"""
+Provides a scalar specification URL for specifying the behavior of custom scalar types.
+"""
+directive @specifiedBy(url: String!) on SCALAR
+extend schema @link(
+	url: "https://specs.apollo.dev/federation/v2.5",
+	import: ["@key", "@tag", "@shareable", "@inaccessible", "@override", "@external", "@provides", "@requires", "@composeDirective", "@interfaceObject", "@requiresScopes"]
+)
+
+
