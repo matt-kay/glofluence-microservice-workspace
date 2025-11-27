@@ -1,10 +1,10 @@
-use async_graphql::SimpleObject;
+use async_graphql::{ID, SimpleObject};
 use corelib::predule::Term as DomainTerm;
 use uuid::Uuid;
 
 #[derive(SimpleObject)]
 pub struct Term {
-    pub id: Uuid,
+    pub id: ID,
 
     pub taxonomy_id: Uuid,
     pub parent_id: Option<Uuid>,
@@ -22,7 +22,7 @@ pub struct Term {
 impl From<DomainTerm> for Term {
     fn from(value: DomainTerm) -> Self {
         Self {
-            id: value.id.as_uuid(),
+            id: value.id.as_uuid().into(),
             taxonomy_id: value.taxonomy_id.as_uuid(),
             parent_id: value.parent_id.map(|v| v.as_uuid()),
             name: value.name.as_str().to_string(),

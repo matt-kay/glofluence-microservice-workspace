@@ -9,7 +9,7 @@ pub type AppSchema = Schema<Query, Mutation, EmptySubscription>;
 
 pub fn build_schema(app_state: AppState) -> AppSchema {
     Schema::build(Query, Mutation, EmptySubscription)
-        // .enable_federation()
+        .enable_federation()
         .data(app_state)
         .finish()
 }

@@ -1,13 +1,13 @@
 use std::collections::HashMap;
 
-use async_graphql::SimpleObject;
+use async_graphql::{ID, SimpleObject};
 use bin_shared_kernel::predule::SocialProfile;
 use corelib::predule::User as DomainUser;
 use uuid::Uuid;
 
 #[derive(SimpleObject)]
 pub struct User {
-    pub id: Uuid,
+    pub id: ID,
 
     pub first_name: String,
     pub last_name: String,
@@ -26,7 +26,7 @@ pub struct User {
 impl From<DomainUser> for User {
     fn from(value: DomainUser) -> Self {
         Self {
-            id: value.id.as_uuid(),
+            id: value.id.as_uuid().into(),
             first_name: value.first_name.as_str().to_string(),
             last_name: value.last_name.as_str().to_string(),
             country_term_id: value.country_term_id.as_uuid(),

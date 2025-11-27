@@ -1,10 +1,10 @@
-use async_graphql::SimpleObject;
+use async_graphql::{ID, SimpleObject};
 use corelib::predule::Taxonomy as DomainTaxonomy;
 use uuid::Uuid;
 
 #[derive(SimpleObject)]
 pub struct Taxonomy {
-    pub id: Uuid,
+    pub id: ID,
 
     pub parent_id: Option<Uuid>,
     pub name: String,
@@ -21,7 +21,7 @@ pub struct Taxonomy {
 impl From<DomainTaxonomy> for Taxonomy {
     fn from(value: DomainTaxonomy) -> Self {
         Self {
-            id: value.id.as_uuid(),
+            id: value.id.as_uuid().into(),
             parent_id: value.parent_id.map(|v| v.as_uuid()),
             name: value.name.as_str().to_string(),
             visible: value.visible,

@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+use async_graphql::ID;
 use async_graphql::SimpleObject;
 use corelib::predule::Business as DomainBusiness;
 use corelib::predule::BusinessFeatures as DomainBusinessFeatures;
@@ -51,7 +52,7 @@ pub struct BusinessFeatures {
 
 #[derive(SimpleObject)]
 pub struct Business {
-    pub id: Uuid,
+    pub id: ID,
 
     pub name: String,
     pub description: Option<String>,
@@ -141,7 +142,7 @@ impl From<DomainBusinessFeatures> for BusinessFeatures {
 impl From<DomainBusiness> for Business {
     fn from(value: DomainBusiness) -> Self {
         Self {
-            id: value.id.as_uuid(),
+            id: value.id.as_uuid().into(),
             name: value.name.as_str().to_string(),
             description: value.description.map(|v| v.as_str().to_string()),
             contact_info: value.contact_info.map(|v| v.into()),
