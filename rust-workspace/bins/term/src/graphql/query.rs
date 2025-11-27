@@ -10,8 +10,22 @@ pub struct Query;
 
 #[Object]
 impl Query {
-    /// Get a single Term
+    /// Get a single Term Entity
     #[graphql(entity)]
+    async fn by_id<'ctx>(&self, ctx: &Context<'ctx>, id: ID) -> Result<Option<Term>, Error> {
+        let app_state = ctx
+            .data::<AppState>()
+            .map_err(|_| Error::new("AppState not available"))?;
+
+        let term_service = app_state.term_service.lock().await;
+
+        let t_id = Uuid::from_str(id.as_str())?;
+        let term_id = TermId::from_uuid(t_id);
+        let domain_term = term_service.find_by_id(&term_id).await?;
+
+        Ok(domain_term.map(Term::from))
+    }
+    /// Get a single Term
     async fn get_term<'ctx>(&self, ctx: &Context<'ctx>, id: ID) -> Result<Option<Term>, Error> {
         let app_state = ctx
             .data::<AppState>()

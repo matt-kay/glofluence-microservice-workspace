@@ -32,6 +32,10 @@ type Mutation {
 
 type Query {
 	"""
+	Get a single User
+	"""
+	getUser(id: ID!): User
+	"""
 	Get many  User
 	"""
 	getUsers: String!

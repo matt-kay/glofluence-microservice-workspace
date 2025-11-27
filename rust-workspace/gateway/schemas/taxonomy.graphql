@@ -26,13 +26,17 @@ type Mutation {
 
 type Query {
 	"""
+	Get a single Taxonomy
+	"""
+	getTaxonomy(id: ID!): Taxonomy
+	"""
 	Get many  Taxonomy
 	"""
-	getTaxonomy: String!
+	getTaxonomies: String!
 	"""
 	Search  Taxonomy
 	"""
-	searchTaxonomy: String!
+	searchTaxonomies: String!
 }
 
 type Taxonomy @key(fields: "id") {

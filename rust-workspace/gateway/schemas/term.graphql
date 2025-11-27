@@ -27,6 +27,10 @@ type Mutation {
 
 type Query {
 	"""
+	Get a single Term
+	"""
+	getTerm(id: ID!): Term
+	"""
 	Get many  Term
 	"""
 	getTerms: String!

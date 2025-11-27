@@ -1,5 +1,10 @@
 supergraph:
   introspection: true
+  
+include_subgraph_errors:
+  all: false
+  subgraphs:
+    user: true
 
 cors:
   allow_any_origin: true

@@ -238,17 +238,26 @@ type Query
   """Search  Business"""
   searchBusinesss: String! @join__field(graph: BUSINESS)
 
+  """Get a single Taxonomy"""
+  getTaxonomy(id: ID!): Taxonomy @join__field(graph: TAXONOMY)
+
   """Get many  Taxonomy"""
-  getTaxonomy: String! @join__field(graph: TAXONOMY)
+  getTaxonomies: String! @join__field(graph: TAXONOMY)
 
   """Search  Taxonomy"""
-  searchTaxonomy: String! @join__field(graph: TAXONOMY)
+  searchTaxonomies: String! @join__field(graph: TAXONOMY)
+
+  """Get a single Term"""
+  getTerm(id: ID!): Term @join__field(graph: TERM)
 
   """Get many  Term"""
   getTerms: String! @join__field(graph: TERM)
 
   """Search  Term"""
   searchTerms: String! @join__field(graph: TERM)
+
+  """Get a single User"""
+  getUser(id: ID!): User @join__field(graph: USER)
 
   """Get many  User"""
   getUsers: String! @join__field(graph: USER)

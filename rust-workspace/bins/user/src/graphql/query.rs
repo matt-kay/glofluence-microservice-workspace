@@ -10,8 +10,24 @@ pub struct Query;
 
 #[Object]
 impl Query {
-    /// Get a single User
+    /// Get a single User Entity
     #[graphql(entity)]
+    async fn by_id<'ctx>(&self, ctx: &Context<'ctx>, id: ID) -> Result<Option<User>, Error> {
+        let app_state = ctx
+            .data::<AppState>()
+            .map_err(|_| Error::new("AppState not available"))?;
+
+        let user_service = app_state.user_service.lock().await;
+
+        let u_id = Uuid::from_str(id.as_str())?;
+        let user_id = UserId::from_uuid(u_id);
+
+        let domain_user = user_service.find_by_id(&user_id).await?;
+
+        Ok(domain_user.map(User::from))
+    }
+
+    /// Get a single User
     async fn get_user<'ctx>(&self, ctx: &Context<'ctx>, id: ID) -> Result<Option<User>, Error> {
         let app_state = ctx
             .data::<AppState>()
@@ -22,7 +38,6 @@ impl Query {
         let u_id = Uuid::from_str(id.as_str())?;
         let user_id = UserId::from_uuid(u_id);
 
-        
         let domain_user = user_service.find_by_id(&user_id).await?;
 
         Ok(domain_user.map(User::from))
