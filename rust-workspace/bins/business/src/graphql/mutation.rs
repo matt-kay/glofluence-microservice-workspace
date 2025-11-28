@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use async_graphql::{Context, ErrorExtensions, Object, Result};
+use async_graphql::{Context, Object, Result};
 use corelib::predule::{
     BusinessDescription, BusinessFeatures, BusinessHourEntry, BusinessId, BusinessName,
     ContactInfo, DomainError, EmailAddress, ExtraFeatureKey, ExtraFeatureValue, PhoneNumber,

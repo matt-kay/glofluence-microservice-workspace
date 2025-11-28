@@ -8,7 +8,6 @@ use corelib::predule::BusinessHourEntry as DomainBusinessHourEntry;
 use corelib::predule::ContactInfo as DomainContactInfo;
 use corelib::predule::SocialMedia as DomainSocialMedia;
 
-use uuid::Uuid;
 
 #[derive(SimpleObject)]
 pub struct ContactInfo {

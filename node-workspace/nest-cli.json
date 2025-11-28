@@ -8,7 +8,7 @@
       "type": "application",
       "root": "apps/identity",
       "sourceRoot": "apps/identity/src",
-      "entryFile": "identity",
+      "entryFile": "main",
       "compilerOptions": {
         "tsConfigPath": "apps/identity/tsconfig.app.json"
       }
@@ -17,7 +17,7 @@
       "type": "application",
       "root": "apps/wallet",
       "sourceRoot": "apps/wallet/src",
-      "entryFile": "identity",
+      "entryFile": "main",
       "compilerOptions": {
         "tsConfigPath": "apps/wallet/tsconfig.app.json"
       }

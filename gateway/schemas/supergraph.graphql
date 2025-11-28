@@ -162,6 +162,7 @@ enum join__Graph {
   TAXONOMY @join__graph(name: "taxonomy", url: "http://localhost:3003")
   TERM @join__graph(name: "term", url: "http://localhost:3002")
   USER @join__graph(name: "user", url: "http://localhost:3001")
+  WALLET @join__graph(name: "wallet", url: "http://localhost:3006/graphql")
 }
 
 """A scalar that can represent any JSON Object value."""
@@ -244,6 +245,7 @@ type Query
   @join__type(graph: TAXONOMY)
   @join__type(graph: TERM)
   @join__type(graph: USER)
+  @join__type(graph: WALLET)
 {
   """Get many  Business"""
   getBusinesss: String! @join__field(graph: BUSINESS)
@@ -278,6 +280,7 @@ type Query
 
   """Search  User"""
   searchUsers: String! @join__field(graph: USER)
+  getWallet(id: String!): Wallet! @join__field(graph: WALLET)
 }
 
 type SocialMedia
@@ -440,3 +443,14 @@ scalar UUID
   @join__type(graph: TAXONOMY)
   @join__type(graph: TERM)
   @join__type(graph: USER)
+
+type Wallet
+  @join__type(graph: WALLET, key: "id")
+{
+  id: ID!
+  balance: Float!
+  createdAt: String!
+  updatedAt: String!
+  deleted: Boolean!
+  deletedAt: String!
+}

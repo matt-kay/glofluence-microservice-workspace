@@ -23,3 +23,7 @@ subgraphs:
     routing_url: http://localhost:3005/graphql
     schema:
       file: ../schemas/identity.graphql
+  wallet:
+    routing_url: http://localhost:3006/graphql
+    schema:
+      file: ../schemas/wallet.graphql

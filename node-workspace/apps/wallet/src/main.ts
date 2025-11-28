@@ -1,8 +1,13 @@
 import { NestFactory } from '@nestjs/core';
-import { WalletModule } from './wallet.module';
+import { ConsoleLogger } from '@nestjs/common';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(WalletModule);
-  await app.listen(process.env.port ?? 3000);
+  const app = await NestFactory.create(AppModule, {
+    logger: new ConsoleLogger({
+      prefix: 'WalletSubgraph',
+    }),
+  });
+  await app.listen(process.env.PORT ?? 3006);
 }
 bootstrap();

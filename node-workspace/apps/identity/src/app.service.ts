@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Identity } from './graphql/type';
 
 @Injectable()
-export class IdentityService {
+export class AppService {
   findById(id: string): Identity {
     const identity = new Identity();
     identity.id = id;

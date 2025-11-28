@@ -1,9 +1,9 @@
-use env_config::predule::{DatabaseConfig, ServerConfig};
+use env_config::predule::{ ServerConfig};
 
 
 pub struct EnvConfig {
     pub server: ServerConfig,
-    pub database: DatabaseConfig,
+    // pub database: DatabaseConfig,
 }
 
 impl EnvConfig {
@@ -12,7 +12,7 @@ impl EnvConfig {
 
         Self {
             server: ServerConfig::load("TERM_SUBGRAPH"),
-            database: DatabaseConfig::load(),
+            // database: DatabaseConfig::load(),
         }
     }
 }
