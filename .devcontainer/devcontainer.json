@@ -14,7 +14,8 @@
             "extensions": [
                 "rust-lang.rust-analyzer",
                 "ms-vscode.cpptools",
-                "ms-vscode.vscode-typescript-next"
+                "ms-vscode.vscode-typescript-next",
+                "ritwickdey.LiveServer"
             ]
         }
     }

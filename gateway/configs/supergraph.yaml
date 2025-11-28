@@ -19,3 +19,7 @@ subgraphs:
     routing_url: http://localhost:3004
     schema:
       file: ../schemas/business.graphql
+  identity:
+    routing_url: http://localhost:3005/graphql
+    schema:
+      file: ../schemas/identity.graphql

@@ -164,7 +164,7 @@ If you paste me your current folder structure (subgraph dirs, etc.), I can write
 
 
 intropect subgraph
-rover subgraph introspect http://localhost:<PORT> > ./rust-workspace/gateway/schemas/<NAME>.graphql
+rover subgraph introspect http://localhost:<PORT> > ./schemas/<NAME>.graphql
 
 create supergraph
 rover supergraph compose --config ./configs/supergraph.yaml > ./schemas/supergraph.graphql

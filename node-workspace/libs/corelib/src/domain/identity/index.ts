@@ -1,8 +1,7 @@
 
 
 import {
-    Deleted,
-    deletedNew,
+    Deleted, deletedNew,
     deletedMarkDeleted,
     deletedRestore,
 } from "../shared/value-objects/soft_delete";
@@ -25,7 +24,7 @@ import { newEventId } from "../shared/value-objects/event_id";
 export class Identity {
     public readonly id: IdentityId;
 
-    private primaryEmail: string;
+    private primaryEmail?: string;
 
     private timestamps: Timestamp;
     private deleted: Deleted;
@@ -35,7 +34,7 @@ export class Identity {
 
     private constructor(args: {
         id: IdentityId;
-        primaryEmail: string;
+        primaryEmail?: string;
         timestamps: Timestamp;
         deleted: Deleted;
         version: number;
@@ -49,7 +48,7 @@ export class Identity {
 
     static create(args: {
         id: IdentityId;
-        primaryEmail: string;
+        primaryEmail?: string;
     }): Identity {
         const timestamps = timestampNew();
         const deleted = deletedNew();
@@ -127,7 +126,7 @@ export class Identity {
     }
 
 
-    getPrimaryEmail(): string {
+    getPrimaryEmail(): string | undefined {
         return this.primaryEmail;
     }
 

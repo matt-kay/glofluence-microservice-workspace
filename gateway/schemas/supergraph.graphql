@@ -143,10 +143,22 @@ input CreateUserInput
   demographics: JSONObject
 }
 
+type Identity
+  @join__type(graph: IDENTITY, key: "id")
+{
+  id: ID!
+  primaryEmail: String
+  createdAt: String!
+  updatedAt: String!
+  deleted: Boolean!
+  deletedAt: String!
+}
+
 scalar join__FieldSet
 
 enum join__Graph {
   BUSINESS @join__graph(name: "business", url: "http://localhost:3004")
+  IDENTITY @join__graph(name: "identity", url: "http://localhost:3005/graphql")
   TAXONOMY @join__graph(name: "taxonomy", url: "http://localhost:3003")
   TERM @join__graph(name: "term", url: "http://localhost:3002")
   USER @join__graph(name: "user", url: "http://localhost:3001")
@@ -228,6 +240,7 @@ type Mutation
 
 type Query
   @join__type(graph: BUSINESS)
+  @join__type(graph: IDENTITY)
   @join__type(graph: TAXONOMY)
   @join__type(graph: TERM)
   @join__type(graph: USER)
@@ -237,6 +250,7 @@ type Query
 
   """Search  Business"""
   searchBusinesss: String! @join__field(graph: BUSINESS)
+  getIdentity(id: String!): Identity! @join__field(graph: IDENTITY)
 
   """Get a single Taxonomy"""
   getTaxonomy(id: ID!): Taxonomy @join__field(graph: TAXONOMY)
