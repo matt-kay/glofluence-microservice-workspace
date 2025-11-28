@@ -1,15 +1,16 @@
+import { Inject, Injectable } from "@nestjs/common";
 import Identity from "../../domain/identity";
-import { IIdentityRepository } from "../../domain/identity/ports/repository";
+import { IDENTITY_REPOSITORY, type IIdentityRepository } from "../../domain/identity/ports/repository";
 import { IdentityId, newIdentityId } from "../../domain/identity/value-objects/identity_id";
 import { DomainError } from "../../domain/shared/error";
 
 
+@Injectable()
 export class IdentityService {
-    private repo: IIdentityRepository;
-
-    constructor(repo: IIdentityRepository) {
-        this.repo = repo;
-    }
+    constructor(
+        @Inject(IDENTITY_REPOSITORY)
+        private readonly repo: IIdentityRepository,
+    ) { }
 
     // ------------------------------------------------------
     // Queries

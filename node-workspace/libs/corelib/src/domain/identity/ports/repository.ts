@@ -20,3 +20,6 @@ export interface IIdentityRepository {
 
     delete(id: IdentityId): Promise<void>;
 }
+
+
+export const IDENTITY_REPOSITORY = Symbol('IDENTITY_REPOSITORY');

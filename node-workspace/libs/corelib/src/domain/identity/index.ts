@@ -126,19 +126,19 @@ export class Identity {
     }
 
 
-    getPrimaryEmail(): string | undefined {
+    get getPrimaryEmail(): string | undefined {
         return this.primaryEmail;
     }
 
-    getTimestamps(): Timestamp {
+    get getTimestamps(): Timestamp {
         return this.timestamps;
     }
 
-    getDeleted(): Deleted {
+    get getDeleted(): Deleted {
         return this.deleted;
     }
 
-    getVersion(): number {
+    get getVersion(): number {
         return this.version;
     }
 }
