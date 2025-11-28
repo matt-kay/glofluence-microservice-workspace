@@ -1,0 +1,44 @@
+{
+  "collection": "@nestjs/schematics",
+  "monorepo": true,
+  "root": "apps",
+  "sourceRoot": "apps/main/src",
+  "projects": {
+    "main": {
+      "type": "application",
+      "root": "apps/main",
+      "sourceRoot": "apps/main/src",
+      "entryFile": "main",
+      "compilerOptions": {
+        "tsConfigPath": "apps/main/tsconfig.app.json"
+      }
+    },
+    "wallet": {
+      "type": "application",
+      "root": "apps/wallet",
+      "sourceRoot": "apps/wallet/src",
+      "entryFile": "main",
+      "compilerOptions": {
+        "tsConfigPath": "apps/wallet/tsconfig.app.json"
+      }
+    },
+    "identity": {
+      "type": "application",
+      "root": "apps/identity",
+      "sourceRoot": "apps/identity/src",
+      "entryFile": "main",
+      "compilerOptions": {
+        "tsConfigPath": "apps/identity/tsconfig.build.json"
+      }
+    },
+    "corelib": {
+      "type": "library",
+      "root": "libs/corelib",
+      "sourceRoot": "libs/corelib/src",
+      "entryFile": "index",
+      "compilerOptions": {
+        "tsConfigPath": "libs/corelib/tsconfig.lib.json"
+      }
+    }
+  }
+}
