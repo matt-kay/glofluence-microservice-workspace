@@ -1,3 +1,13 @@
 packages:
+<<<<<<< HEAD
   - 'apps/*'
   - 'libs/*'
+=======
+  - apps/*
+  - libs/*
+
+onlyBuiltDependencies:
+  - '@apollo/protobufjs'
+  - '@nestjs/core'
+  - unrs-resolver
+>>>>>>> 1aed4f6 (local dev setup)
